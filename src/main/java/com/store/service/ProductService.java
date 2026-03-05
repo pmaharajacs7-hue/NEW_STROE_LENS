@@ -121,7 +121,7 @@ public ProductDTO sellProduct(Long proId, int quantity, Long shopId) {
     }
 
     // calculate final amount
-    int finalAmount = quantity * product.getPro_amount();
+    Double finalAmount = quantity * product.getPro_amount();
 
     // reduce stock
     product.setPro_count(product.getPro_count() - quantity);
