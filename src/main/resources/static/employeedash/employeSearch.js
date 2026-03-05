@@ -34,7 +34,7 @@ async function doSearch(){
   const q=document.getElementById('sq').value.trim();
   if(!q)return toast('Please type a product name.','err');
   try{
-    const r=await fetch(`${API}/products/search?query=${encodeURIComponent(q)}`,{headers:H()});
+    const r=await fetch(`${API}/api/products/search?query=${encodeURIComponent(q)}`,{headers:H()});
     if(r.status===403)return toast('Access denied.','err');
     const prods=await r.json();
     document.getElementById('initState').style.display='none';
@@ -120,7 +120,7 @@ async function confirmSell(){
   }
 
   try{
-    const r=await fetch(`${API}/products/sell/${sellTarget.proId}`,{
+    const r=await fetch(`${API}/api/products/sell/${sellTarget.proId}`,{
       method:'POST',
       headers:H(),
       body:JSON.stringify({quantity:qty})
@@ -188,7 +188,7 @@ async function transcribe(blob){
   try{
     const fd=new FormData();
     fd.append('audio',blob,'recording.webm');
-    const r=await fetch(`${API}/voice/transcribe`,{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+    const r=await fetch(`${API}/api/voice/transcribe`,{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
     if(!r.ok)throw new Error();
     const d=await r.json();
     const txt=(d.text||'').trim();
