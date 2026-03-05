@@ -15,13 +15,14 @@ public class Sale {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long saleId;
 
+    @Column(nullable = false)
     private Long productId;
-
+    @Column(nullable = false)
     private Long shopId;
-
+    @Column(nullable = false)
     private Integer quantity;
-
+    @Column(nullable = false)
     private Double amount;
-
+    @Column(nullable = false)
     private LocalDate date;
 }
