@@ -1,4 +1,4 @@
-const API='http://localhost:8080/api';
+const API = "https://newstroelens-production.up.railway.app";
 const token=localStorage.getItem('token');
 const role=localStorage.getItem('role');
 
