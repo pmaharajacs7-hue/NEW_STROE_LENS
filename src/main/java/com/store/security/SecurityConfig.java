@@ -70,6 +70,7 @@ public class SecurityConfig {
                 // Public API endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Owner only
+                 .requestMatchers("/auth/**").permitAll()  
                  .requestMatchers("/login/**").permitAll()       
                  .requestMatchers("/ownerdash/**").permitAll()    
                 .requestMatchers("/employeedash/**").permitAll() 
