@@ -69,8 +69,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // Public API endpoints
                 .requestMatchers("/api/auth/**").permitAll()
-                // Owner only
-                 .requestMatchers("/auth/**").permitAll()  
+                // Owner only 
                  .requestMatchers("/login/**").permitAll()       
                  .requestMatchers("/ownerdash/**").permitAll()    
                 .requestMatchers("/employeedash/**").permitAll() 
