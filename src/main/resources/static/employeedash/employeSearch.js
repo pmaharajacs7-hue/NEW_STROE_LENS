@@ -17,7 +17,8 @@ function logout(){localStorage.clear();location.href='/login/index.html'}
 
 function toast(msg,type='ok'){
   const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast '+type;t.style.display='block';
+  t.innerHTML=msg;  // ← changed from textContent to innerHTML
+  t.className='toast '+type;t.style.display='block';
   clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',3500);
 }
 
