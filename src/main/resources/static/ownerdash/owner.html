@@ -6,6 +6,7 @@
 <title>Owner Dashboard — StorePro</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -56,6 +57,10 @@
         <div class="stat"><div class="s-ico"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FDF3D0"><path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"/></svg></div><div class="s-lbl">Out of Stock</div><div class="s-val" id="ds-out">—</div></div>
         <div class="stat accent"><div class="s-ico"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FDF3D0"><path d="M320-160h320v-120q0-66-47-113t-113-47q-66 0-113 47t-47 113v120ZM160-80v-80h80v-120q0-61 28.5-114.5T348-480q-51-32-79.5-85.5T240-680v-120h-80v-80h640v80h-80v120q0 61-28.5 114.5T612-480q51 32 79.5 85.5T720-280v120h80v80H160Z"/></svg></div><div class="s-lbl">Pending Approvals</div><div class="s-val" id="ds-pend">—</div></div>
       </div>
+      <div class="card">
+  <div class="card-head">Sales (Last 10 Days)</div>
+  <canvas id="salesChart" height="100"></canvas>
+</div>
     </div>
 
     <!-- ALL PRODUCTS -->
