@@ -114,3 +114,40 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .toast.ok{background:#0d2e1f;border:1px solid rgba(16,185,129,.4);color:#6ee7b7}
 .toast.err{background:#2d0f0f;border:1px solid rgba(239,68,68,.4);color:#fca5a5}
 .toast.info{background:#1a1600;border:1px solid rgba(245,158,11,.4);color:#fcd34d}
+@media(max-width:768px){
+  nav{padding:0 14px}
+  .nav-info{display:none}
+  .btn-logout{padding:6px 11px;font-size:.75rem}
+
+  .layout{flex-direction:column}
+
+  aside{
+    width:100%;flex-direction:row;flex-wrap:wrap;
+    border-right:none;border-bottom:1px solid var(--border);
+    padding:10px 12px;gap:4px;overflow-x:auto
+  }
+  .aside-label,.aside-sep{display:none}
+  .nav-item{padding:8px 12px;font-size:.78rem;white-space:nowrap}
+  .nav-item .ico{display:none}
+
+  main{padding:16px 12px}
+
+  .stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat .s-val{font-size:1.5rem}
+
+  .fgrid{grid-template-columns:1fr}
+
+  .ph{flex-direction:column;gap:10px}
+
+  .tbl-wrap{overflow-x:auto}
+  table{min-width:600px}
+
+  .modal{padding:20px 16px}
+  .modal-btns{flex-direction:column}
+
+  .toast{right:12px;left:12px;max-width:100%}
+}
+
+@media(max-width:480px){
+  .stats{grid-template-columns:1fr}
+}
