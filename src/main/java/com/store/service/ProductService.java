@@ -21,7 +21,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
-
+    @Autowired
+    private SalesRepository saleRepository;
+    
     private String getStockStatus(int count) {
         if (count == 0) return "OUT_OF_STOCK";
         if (count <= 5) return "LOW_STOCK";
@@ -98,22 +100,44 @@ public class ProductService {
         }
         return saved;
     }
-   public ProductDTO sellProduct(Long proId, int quantity, Long shopId) {
-    Product product = productRepository.findByProIdAndShopId(proId, shopId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+public ProductDTO sellProduct(Long proId, int quantity, Long shopId) {
+
+    Product product = productRepository
+            .findByProIdAndShopId(proId, shopId)
+            .orElseThrow(() ->
+                    new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
     if (product.getPro_count() == 0) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product is out of stock");
     }
+
     if (quantity <= 0) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be greater than 0");
     }
+
     if (quantity > product.getPro_count()) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                 "Not enough stock. Available: " + product.getPro_count());
     }
 
+    // calculate final amount
+    int finalAmount = quantity * product.getPro_amount();
+
+    // reduce stock
     product.setPro_count(product.getPro_count() - quantity);
-    return toDTO(productRepository.save(product));
+
+    productRepository.save(product);
+
+    // create sale record
+    Sale sale = new Sale();
+    sale.setProductId(proId);
+    sale.setShopId(shopId);
+    sale.setQuantity(quantity);
+    sale.setAmount(finalAmount);
+    sale.setDate(LocalDate.now());
+
+    saleRepository.save(sale);
+
+    return toDTO(product);
 }
 }
