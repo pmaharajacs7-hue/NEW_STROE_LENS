@@ -31,7 +31,7 @@ async function login(){
   const password=document.getElementById('lw').value;
   if(!phnum||!password)return alert2('lal','err','Please fill in all fields.');
   try{
-    const r=await fetch(`${API}/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phnum,password,role})});
+    const r=await fetch(`${API}/api/auth/login`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({phnum,password,role})});
     const d=await r.json();
     if(!r.ok)return alert2('lal','err',d.message||'Login failed.');
     localStorage.setItem('token',d.token);
@@ -51,7 +51,7 @@ async function regOwner(){
   if(password!==confirm)return alert2('ral','err','Passwords do not match.');
   if(password.length<6)return alert2('ral','err','Password must be at least 6 characters.');
   try{
-    const r=await fetch(`${API}/auth/register/owner`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ownname,ownphnum,password})});
+    const r=await fetch(`${API}/api/auth/register/owner`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ownname,ownphnum,password})});
     const d=await r.json();
     if(!r.ok)return alert2('ral','err',d.message||'Registration failed.');
     alert2('ral','ok',d.message);
@@ -69,7 +69,7 @@ async function regEmp(){
   if(password!==confirm)return alert2('ral','err','Passwords do not match.');
   if(password.length<6)return alert2('ral','err','Password must be at least 6 characters.');
   try{
-    const r=await fetch(`${API}/auth/register/employee`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({empname,empphnum,password,shopId:parseInt(shopId)})});
+    const r=await fetch(`${API}/api/auth/register/employee`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({empname,empphnum,password,shopId:parseInt(shopId)})});
     const d=await r.json();
     if(!r.ok)return alert2('ral','err',d.message||'Registration failed.');
     alert2('ral','ok',d.message+' Wait for owner approval before logging in.');
