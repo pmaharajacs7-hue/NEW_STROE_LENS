@@ -32,8 +32,8 @@ function show(pg,el){
 async function loadDash(){
   try{
     const [pr,er]=await Promise.all([
-      fetch(`${API}/products`,{headers:H()}),
-      fetch(`${API}/owner/employees/pending`,{headers:H()})
+      fetch(`${API}/api/products`,{headers:H()}),
+      fetch(`${API}/api/owner/employees/pending`,{headers:H()})
     ]);
     const prods=await pr.json();
     const pends=await er.json();
@@ -51,7 +51,7 @@ async function loadProds(){
   const tbody=document.getElementById('prodTbody');
   tbody.innerHTML='<tr class="empty-row"><td colspan="7">Loading…</td></tr>';
   try{
-    const r=await fetch(`${API}/products`,{headers:H()});
+    const r=await fetch(`${API}/api/products`,{headers:H()});
     const prods=await r.json();
     if(!prods.length){tbody.innerHTML='<tr class="empty-row"><td colspan="7">No products yet. Add your first product.</td></tr>';return}
     tbody.innerHTML=prods.map((p,i)=>{
@@ -81,7 +81,7 @@ async function addProduct(){
   const pro_count=document.getElementById('np-cnt').value;
   if(!proName||!pro_location||!pro_amount||!pro_count)return toast('Please fill in all fields.','err');
   try{
-    const r=await fetch(`${API}/products/create`,{method:'POST',headers:H(),body:JSON.stringify({proName,pro_location,pro_amount:parseFloat(pro_amount),pro_count:parseInt(pro_count)})});
+    const r=await fetch(`${API}/api/products/create`,{method:'POST',headers:H(),body:JSON.stringify({proName,pro_location,pro_amount:parseFloat(pro_amount),pro_count:parseInt(pro_count)})});
     const d=await r.json();
     if(!r.ok)return toast(d.message||'Failed','err');
     toast('Product added successfully!');
@@ -106,7 +106,7 @@ async function saveEdit(){
   const pro_amount=document.getElementById('e-amt').value;
   const pro_count=document.getElementById('e-cnt').value;
   try{
-    const r=await fetch(`${API}/products/update/${proId}`,{method:'PUT',headers:H(),body:JSON.stringify({proName,pro_location,pro_amount:parseFloat(pro_amount),pro_count:parseInt(pro_count)})});
+    const r=await fetch(`${API}/api/products/update/${proId}`,{method:'PUT',headers:H(),body:JSON.stringify({proName,pro_location,pro_amount:parseFloat(pro_amount),pro_count:parseInt(pro_count)})});
     if(!r.ok){const d=await r.json();return toast(d.message||'Failed','err')}
     toast('Product updated!');closeEdit();loadProds();
   }catch(e){toast('Error updating','err')}
@@ -115,7 +115,7 @@ async function saveEdit(){
 async function delProd(proId){
   if(!confirm('Delete this product? This cannot be undone.'))return;
   try{
-    const r=await fetch(`${API}/products/delete/${proId}`,{method:'DELETE',headers:H()});
+    const r=await fetch(`${API}/api/products/delete/${proId}`,{method:'DELETE',headers:H()});
     if(!r.ok){const d=await r.json();return toast(d.message||'Failed','err')}
     toast('Product deleted.','info');loadProds();
   }catch(e){toast('Error deleting','err')}
@@ -126,7 +126,7 @@ async function uploadCSV(){
   if(!file)return toast('Please select a CSV file.','err');
   const fd=new FormData();fd.append('file',file);
   try{
-    const r=await fetch(`${API}/products/upload-csv`,{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
+    const r=await fetch(`${API}/api/products/upload-csv`,{method:'POST',headers:{'Authorization':'Bearer '+token},body:fd});
     const d=await r.json();
     if(!r.ok)return toast(d.message||'Upload failed','err');
     toast(`${d.length} products imported!`);
@@ -137,8 +137,8 @@ async function uploadCSV(){
 async function loadEmps(){
   try{
     const [pr,ar]=await Promise.all([
-      fetch(`${API}/owner/employees/pending`,{headers:H()}),
-      fetch(`${API}/owner/employees`,{headers:H()})
+      fetch(`${API}/api/owner/employees/pending`,{headers:H()}),
+      fetch(`${API}/api/owner/employees`,{headers:H()})
     ]);
     const pend=await pr.json();
     const all=await ar.json();
@@ -183,7 +183,7 @@ async function loadEmps(){
 
 async function approveEmp(empId){
   try{
-    const r=await fetch(`${API}/owner/employees/${empId}/approve`,{method:'POST',headers:H()});
+    const r=await fetch(`${API}/api/owner/employees/${empId}/approve`,{method:'POST',headers:H()});
     if(!r.ok){const d=await r.json();return toast(d.message||'Failed','err')}
     toast('Employee approved!');loadEmps();loadDash();
   }catch(e){toast('Error','err')}
@@ -192,7 +192,7 @@ async function approveEmp(empId){
 async function rejectEmp(empId){
   if(!confirm('Reject and remove this employee?'))return;
   try{
-    const r=await fetch(`${API}/owner/employees/${empId}/reject`,{method:'DELETE',headers:H()});
+    const r=await fetch(`${API}/api/owner/employees/${empId}/reject`,{method:'DELETE',headers:H()});
     if(!r.ok){const d=await r.json();return toast(d.message||'Failed','err')}
     toast('Employee rejected.','info');loadEmps();loadDash();
   }catch(e){toast('Error','err')}
