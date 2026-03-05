@@ -188,7 +188,30 @@ async function approveEmp(empId){
     toast('Employee approved!');loadEmps();loadDash();
   }catch(e){toast('Error','err')}
 }
+async function loadDash(){
+try{
 
+const [pr,er]=await Promise.all([
+fetch(`${API}/api/products`,{headers:H()}),
+fetch(`${API}/api/owner/employees/pending`,{headers:H()})
+]);
+
+const prods=await pr.json();
+const pends=await er.json();
+
+document.getElementById('ds-total').textContent=prods.length;
+document.getElementById('ds-low').textContent=prods.filter(p=>p.stockStatus==='LOW_STOCK').length;
+document.getElementById('ds-out').textContent=prods.filter(p=>p.stockStatus==='OUT_OF_STOCK').length;
+
+const pc=Array.isArray(pends)?pends.length:0;
+document.getElementById('ds-pend').textContent=pc;
+
+loadSalesChart();
+
+}catch(e){
+toast('Failed to load dashboard','err')
+}
+}
 async function rejectEmp(empId){
   if(!confirm('Reject and remove this employee?'))return;
   try{
