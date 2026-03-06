@@ -19,14 +19,15 @@ function toast(msg,type='ok'){
 
 function logout(){localStorage.clear();location.href='/login/index.html'}
 
-function show(pg,el){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
-  document.getElementById('pg-'+pg).classList.add('on');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
-  el.classList.add('on');
-  if(pg==='dashboard')loadDash();
-  if(pg==='products')loadProds();
-  if(pg==='employees')loadEmps();
+function show(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('on'));
+  document.getElementById('pg-' + page).classList.add('on');
+  if (el) el.classList.add('on');
+  if (page === 'dashboard') loadDash();
+  if (page === 'products') loadProds();
+  if (page === 'employees') loadEmps();
+  if (page === 'sales') loadSalesChart();
 }
 
 async function loadDash(){
@@ -220,5 +221,66 @@ async function rejectEmp(empId){
     toast('Employee rejected.','info');loadEmps();loadDash();
   }catch(e){toast('Error','err')}
 }
+let salesChart = null;
 
+async function loadSalesChart() {
+  document.getElementById('chartMsg').textContent = 'Loading…';
+  document.getElementById('chartMsg').style.display = 'block';
+  document.getElementById('salesCanvas').style.display = 'none';
+
+  try {
+    const r = await fetch(`${API}/api/sales/chart`, { headers: H() });
+    const d = await r.json();
+
+    if (!d.products || d.products.length === 0) {
+      document.getElementById('chartMsg').textContent = 'No sales data in the last 10 days.';
+      return;
+    }
+
+    document.getElementById('chartMsg').style.display = 'none';
+    document.getElementById('salesCanvas').style.display = 'block';
+
+    const colors = [
+      '#f59e0b','#3b82f6','#10b981','#ef4444',
+      '#8b5cf6','#ec4899','#06b6d4','#84cc16'
+    ];
+
+    const datasets = d.products.map((p, i) => ({
+      label: p.name,
+      data: p.quantities,
+      backgroundColor: colors[i % colors.length] + '33',
+      borderColor: colors[i % colors.length],
+      borderWidth: 2,
+      borderRadius: 6,
+    }));
+
+    if (salesChart) salesChart.destroy();
+
+    salesChart = new Chart(document.getElementById('salesCanvas'), {
+      type: 'bar',
+      data: { labels: d.dates, datasets },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            labels: { color: '#f0f0f5', font: { family: 'DM Sans' } }
+          }
+        },
+        scales: {
+          x: {
+            ticks: { color: '#6b7280' },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#6b7280', stepSize: 1 },
+            grid: { color: 'rgba(255,255,255,0.05)' }
+          }
+        }
+      }
+    });
+  } catch(e) {
+    document.getElementById('chartMsg').textContent = 'Failed to load chart.';
+  }
+}
 loadDash();
